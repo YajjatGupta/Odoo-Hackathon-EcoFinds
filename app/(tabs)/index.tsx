@@ -32,7 +32,7 @@ export default function HomeScreen() {
           </ThemedText>
           {/* New container for user and cart icons */}
           <View style={styles.rightIcons}>
-            {/* New User Logo */}
+            {/* New User Profile Logo */}
             <Link href="/(tabs)/auth/login" asChild>
               <TouchableOpacity style={styles.userIcon}>
                 <Image
