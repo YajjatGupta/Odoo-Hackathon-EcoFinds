@@ -1,19 +1,23 @@
 const express = require('express');
 const { body } = require('express-validator');
 const router = express.Router();
-const authController = require('../controllers/authController');
 
-router.post('/register',
+// Correct path and name
+const authController = require('../controllers/authcontrollers'); 
+
+router.post(
+  '/register',
   body('email').isEmail(),
   body('password').isLength({ min: 6 }),
-  body('username').notEmpty(),
-  authController.register
+  body('name').notEmpty(), // changed from username to name to match schema
+  authController.registerUser
 );
 
-router.post('/login',
+router.post(
+  '/login',
   body('email').isEmail(),
   body('password').exists(),
-  authController.login
+  authController.loginUser
 );
 
 module.exports = router;
