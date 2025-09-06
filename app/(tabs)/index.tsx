@@ -1,8 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, ScrollView, TextInput, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { Stack } from 'expo-router';
+import { Image } from 'expo-image';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from 'react-native';
 
@@ -17,34 +19,31 @@ export default function HomeScreen() {
         {/* Header Section */}
         <View style={styles.header}>
           <TouchableOpacity style={styles.menuIcon}>
-            {/* Placeholder for Menu Icon */}
-            <ThemedText style={styles.iconText}>☰</ThemedText>
+            <IconSymbol name="line.3.horizontal" size={28} color={themeColors.text} />
           </TouchableOpacity>
           <ThemedText type="title" style={styles.headerLogo}>EcoFinds</ThemedText>
           <TouchableOpacity style={styles.cartIcon}>
-            {/* Placeholder for Cart Icon */}
-            <ThemedText style={styles.iconText}>🛒</ThemedText>
+            <IconSymbol name="cart.fill" size={28} color={themeColors.text} />
             <View style={[styles.cartBadge, { backgroundColor: themeColors.tint }]}>
               <ThemedText style={styles.cartCount}>0</ThemedText>
             </View>
           </TouchableOpacity>
         </View>
 
-        {/* Search Bar Section */}
+        {/* Search & Filter Section */}
         <View style={styles.searchSection}>
-          <View style={[styles.searchInputContainer, { backgroundColor: themeColors.backgroundAlt }]}>
-            <TextInput
-              placeholder="Search ...."
-              placeholderTextColor={themeColors.textSecondary}
-              style={[styles.searchInput, { color: themeColors.text }]}
-            />
-          </View>
-          <View style={styles.searchButtons}>
-            {['Sort', 'Filter', 'Groupby'].map((buttonText) => (
-              <TouchableOpacity key={buttonText} style={[styles.searchButton, { borderColor: themeColors.border }]}>
-                <ThemedText style={{ color: themeColors.text }}>{buttonText}</ThemedText>
-              </TouchableOpacity>
-            ))}
+          <View style={styles.searchRow}>
+            <View style={[styles.searchInputContainer, { backgroundColor: themeColors.backgroundAlt }]}>
+              <IconSymbol name="magnifyingglass" size={20} color={themeColors.textSecondary} style={styles.searchIcon} />
+              <TextInput
+                placeholder="Search for eco-friendly products..."
+                placeholderTextColor={themeColors.textSecondary}
+                style={[styles.searchInput, { color: themeColors.text }]}
+              />
+            </View>
+            <TouchableOpacity style={[styles.filterButton, { borderColor: themeColors.border, backgroundColor: themeColors.backgroundAlt }]}>
+              <IconSymbol name="slider.horizontal.3" size={24} color={themeColors.text} />
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -71,7 +70,9 @@ export default function HomeScreen() {
           <View style={styles.productGrid}>
             {[1, 2, 3, 4].map((item) => (
               <TouchableOpacity key={item} style={[styles.productCard, { backgroundColor: themeColors.backgroundAlt, borderColor: themeColors.border }]}>
-                <ThemedText style={{ color: themeColors.textSecondary }}>Product {item}</ThemedText>
+                <Image source={{ uri: `https://picsum.photos/id/${100 + item}/200` }} style={styles.productImage} />
+                <ThemedText style={styles.productName}>Product {item}</ThemedText>
+                <ThemedText style={styles.productPrice}>₹999</ThemedText>
               </TouchableOpacity>
             ))}
           </View>
@@ -104,9 +105,6 @@ const styles = StyleSheet.create({
     padding: 8,
     position: 'relative',
   },
-  iconText: {
-    fontSize: 24,
-  },
   cartBadge: {
     position: 'absolute',
     top: 0,
@@ -125,22 +123,28 @@ const styles = StyleSheet.create({
   searchSection: {
     marginBottom: 20,
   },
+  searchRow: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+  },
   searchInputContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    marginBottom: 10,
+  },
+  searchIcon: {
+    marginRight: 8,
   },
   searchInput: {
+    flex: 1,
     fontSize: 16,
   },
-  searchButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  searchButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+  filterButton: {
+    padding: 10,
     borderRadius: 8,
     borderWidth: 1,
   },
@@ -151,19 +155,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
   },
-  bannerImage: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 8,
-    resizeMode: 'cover',
-  },
-  categoriesSection: {
+  productsSection: {
     marginBottom: 20,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+  },
+  categoriesSection: {
+    marginBottom: 20,
   },
   categoryScroll: {
     paddingVertical: 5,
@@ -177,21 +178,33 @@ const styles = StyleSheet.create({
     marginRight: 10,
     borderWidth: 1,
   },
-  productsSection: {
-    marginBottom: 20,
-  },
   productGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    gap: 16,
   },
   productCard: {
     width: '48%',
-    height: 150,
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
     borderWidth: 1,
+    padding: 10,
+    marginBottom: 10,
+  },
+  productImage: {
+    width: '100%',
+    height: 100,
+    borderRadius: 8,
+    marginBottom: 10,
+    backgroundColor: '#eee',
+  },
+  productName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  productPrice: {
+    fontSize: 14,
+    color: 'gray',
   },
 });

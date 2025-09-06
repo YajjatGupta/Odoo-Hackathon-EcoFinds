@@ -1,5 +1,4 @@
 // Fallback for using MaterialIcons on Android and web.
-
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { SymbolWeight, SymbolViewProps } from 'expo-symbols';
 import { ComponentProps } from 'react';
@@ -18,10 +17,12 @@ const MAPPING = {
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
-  // New icons for the dashboard screen
   'cart.fill': 'shopping-cart',
   'person.fill': 'person',
   'line.3.horizontal': 'menu',
+  // Added magnifying glass and slider icon mappings
+  'magnifyingglass': 'search',
+  'slider.horizontal.3': 'filter-list',
 } as IconMapping;
 
 /**
