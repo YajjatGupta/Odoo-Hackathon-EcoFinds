@@ -1,142 +1,197 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { Link } from 'expo-router';
-import { useThemeColor } from '@/hooks/useThemeColor';
-
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import React from 'react';
+import { StyleSheet, View, ScrollView, TextInput, TouchableOpacity, Image } from 'react-native';
+import { Stack } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-
-const ProductCard = () => {
-  return (
-    <ThemedView style={styles.productCard}>
-      <Image
-        source={require('@/assets/images/react-logo.png')}
-        style={styles.productImage}
-      />
-      <ThemedView style={{ padding: 10 }}>
-        <ThemedText type="defaultSemiBold">Product Title</ThemedText>
-        <ThemedText style={styles.productPrice}>$99.99</ThemedText>
-      </ThemedView>
-    </ThemedView>
-  );
-};
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from 'react-native';
 
 export default function HomeScreen() {
-  const tintColor = useThemeColor({}, 'tint');
+  const colorScheme = useColorScheme();
+  const themeColors = Colors[colorScheme ?? 'light'];
 
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">EcoFinds</ThemedText>
-      </ThemedView>
+    <ThemedView style={styles.container}>
+      <Stack.Screen options={{ headerShown: false }} />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Header Section */}
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.menuIcon}>
+            {/* Placeholder for Menu Icon */}
+            <ThemedText style={styles.iconText}>☰</ThemedText>
+          </TouchableOpacity>
+          <ThemedText type="title" style={styles.headerLogo}>EcoFinds</ThemedText>
+          <TouchableOpacity style={styles.cartIcon}>
+            {/* Placeholder for Cart Icon */}
+            <ThemedText style={styles.iconText}>🛒</ThemedText>
+            <View style={[styles.cartBadge, { backgroundColor: themeColors.tint }]}>
+              <ThemedText style={styles.cartCount}>0</ThemedText>
+            </View>
+          </TouchableOpacity>
+        </View>
 
-      <ThemedView style={styles.searchContainer}>
-        <ThemedView style={styles.searchInput}>
-          <ThemedText>Search for products...</ThemedText>
-        </ThemedView>
-      </ThemedView>
+        {/* Search Bar Section */}
+        <View style={styles.searchSection}>
+          <View style={[styles.searchInputContainer, { backgroundColor: themeColors.backgroundAlt }]}>
+            <TextInput
+              placeholder="Search ...."
+              placeholderTextColor={themeColors.textSecondary}
+              style={[styles.searchInput, { color: themeColors.text }]}
+            />
+          </View>
+          <View style={styles.searchButtons}>
+            {['Sort', 'Filter', 'Groupby'].map((buttonText) => (
+              <TouchableOpacity key={buttonText} style={[styles.searchButton, { borderColor: themeColors.border }]}>
+                <ThemedText style={{ color: themeColors.text }}>{buttonText}</ThemedText>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
 
-      <ThemedView style={styles.categoryContainer}>
-        <ThemedText>Category 1</ThemedText>
-        <ThemedText>Category 2</ThemedText>
-        <ThemedText>Category 3</ThemedText>
-      </ThemedView>
+        {/* Banner Image Section */}
+        <View style={[styles.bannerContainer, { backgroundColor: themeColors.backgroundAlt }]}>
+          <ThemedText type="subtitle" style={{ color: themeColors.textSecondary }}>Banner Image</ThemedText>
+        </View>
 
-      <ScrollView contentContainerStyle={styles.productFeed}>
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
+        {/* All Categories Section */}
+        <View style={styles.categoriesSection}>
+          <ThemedText type="subtitle" style={styles.sectionTitle}>All Categories</ThemedText>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryScroll}>
+            {[1, 2, 3, 4].map((item) => (
+              <TouchableOpacity key={item} style={[styles.categoryCard, { backgroundColor: themeColors.backgroundAlt, borderColor: themeColors.border }]}>
+                <ThemedText style={{ color: themeColors.textSecondary }}>Category {item}</ThemedText>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* Products Section */}
+        <View style={styles.productsSection}>
+          <ThemedText type="subtitle" style={styles.sectionTitle}>Products</ThemedText>
+          <View style={styles.productGrid}>
+            {[1, 2, 3, 4].map((item) => (
+              <TouchableOpacity key={item} style={[styles.productCard, { backgroundColor: themeColors.backgroundAlt, borderColor: themeColors.border }]}>
+                <ThemedText style={{ color: themeColors.textSecondary }}>Product {item}</ThemedText>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
       </ScrollView>
-
-      <Link href="../add-product" asChild>
-        <TouchableOpacity style={StyleSheet.flatten([styles.fab, { backgroundColor: tintColor }])}>
-          <IconSymbol name="paperplane.fill" size={28} color="#fff" />
-        </TouchableOpacity>
-      </Link>
-    </ParallaxScrollView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+    paddingTop: 50,
+    paddingHorizontal: 16,
+  },
+  header: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 8,
+    marginBottom: 20,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
+  menuIcon: {
+    padding: 8,
+  },
+  headerLogo: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  cartIcon: {
+    padding: 8,
+    position: 'relative',
+  },
+  iconText: {
+    fontSize: 24,
+  },
+  cartBadge: {
     position: 'absolute',
+    top: 0,
+    right: 0,
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  searchContainer: {
-    paddingVertical: 16,
+  cartCount: {
+    color: 'white',
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  searchSection: {
+    marginBottom: 20,
+  },
+  searchInputContainer: {
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginBottom: 10,
   },
   searchInput: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    borderRadius: 8,
+    fontSize: 16,
   },
-  categoryContainer: {
+  searchButtons: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 8,
+    justifyContent: 'space-between',
   },
-  productFeed: {
+  searchButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  bannerContainer: {
+    height: 150,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  bannerImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 8,
+    resizeMode: 'cover',
+  },
+  categoriesSection: {
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  categoryScroll: {
+    paddingVertical: 5,
+  },
+  categoryCard: {
+    width: 120,
+    height: 80,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+    borderWidth: 1,
+  },
+  productsSection: {
+    marginBottom: 20,
+  },
+  productGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    paddingVertical: 10,
-    gap: 10,
   },
   productCard: {
     width: '48%',
-    borderRadius: 8,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#eee',
-    marginBottom: 10,
-  },
-  productImage: {
-    width: '100%',
     height: 150,
-    backgroundColor: '#f0f0f0',
-  },
-  productPrice: {
-    color: '#888',
-    marginTop: 5,
-  },
-  fab: {
-    position: 'absolute',
-    right: 20,
-    bottom: 20,
-    borderRadius: 30,
-    width: 60,
-    height: 60,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
+    marginBottom: 10,
+    borderWidth: 1,
   },
 });
