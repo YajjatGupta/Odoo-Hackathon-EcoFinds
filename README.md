@@ -1,50 +1,72 @@
-# Welcome to your Expo app 👋
+# Odoo-Hackathon-EcoFinds
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Welcome to EcoFinds, an Expo-based mobile application and Node.js backend project created for the Odoo Hackathon. The application is designed to provide a marketplace-style platform for environmentally friendly products.
 
-## Get started
+## Features
 
-1. Install dependencies
+This project includes the following key components and functionalities:
 
-   ```bash
-   npm install
-   ```
+### Frontend (Expo/React Native)
 
-2. Start the app
+  * **File-Based Routing**: The app uses `expo-router` to manage navigation between screens like the home page, an "Explore" tab, and a product creation screen.
+  * **Themed Components**: It supports both light and dark modes, with custom components (`ThemedText` and `ThemedView`) that automatically adapt their styles based on the user's color scheme.
+  * **UI Skeletons**: The `HomeScreen` and `AddProductScreen` have foundational UI layouts for a product feed and a product listing form.
+  * **Platform-Specific Components**: The app utilizes conditional rendering and platform-specific file extensions (e.g., `IconSymbol.ios.tsx`, `TabBarBackground.ios.tsx`) to provide a native feel on different operating systems.
 
-   ```bash
-   npx expo start
-   ```
+### Backend (Node.js/Express)
 
-In the output, you'll find options to open the app in a
+  * **User Authentication**: The server includes an authentication system with routes for user registration and login. It uses `bcryptjs` for password hashing and `jsonwebtoken` for creating and verifying user tokens.
+  * **Database Integration**: It connects to a MongoDB database using Mongoose to store user information, as configured in `backend/src/config/db.js`.
+  * **Environment Variables**: Secure information like the MongoDB URI and JWT secret are managed using a `.env` file.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Getting Started
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Follow these steps to set up and run the project locally.
 
-## Get a fresh project
+### Prerequisites
 
-When you're ready, run:
+  * Node.js (version 18 or higher)
+  * npm or Yarn
+
+### Installation
+
+1.  **Clone the repository**:
+    `git clone <repository-url>`
+
+2.  **Install dependencies**:
+
+    ```bash
+    cd <project-directory>
+    npm install
+    ```
+
+### Running the Project
+
+#### Frontend
+
+To start the Expo development server, run:
 
 ```bash
-npm run reset-project
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+This will provide a QR code that you can scan with the Expo Go app on your phone to view the project.
 
-## Learn more
+#### Backend
 
-To learn more about developing your project with Expo, look at the following resources:
+The backend server is configured to run on port 5000. To start the server:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+cd backend
+npm start
+```
 
-## Join the community
+The server will connect to your MongoDB database using the credentials in the `.env` file and will be accessible at `http://localhost:5000`.
 
-Join our community of developers creating universal apps.
+## Scripts
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+  * `npm start`: Starts the Expo development server for the frontend.
+  * `npm run android`: Opens the app in an Android emulator.
+  * `npm run ios`: Opens the app in an iOS simulator.
+  * `npm run web`: Opens the app in a web browser.
+  * `npm run lint`: Lints the project files.
