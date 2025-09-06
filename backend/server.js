@@ -10,6 +10,7 @@ app.use(express.json());
 connectDB();
 
 app.use('/api/auth', require('./src/config/routes/auth'));
+app.use('/api/purchase', require('./src/config/routes/purchase'));
 
 
 const PORT = process.env.PORT || 5000;
