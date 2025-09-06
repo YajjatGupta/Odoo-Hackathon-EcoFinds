@@ -1,23 +1,31 @@
 const express = require('express');
 const { body } = require('express-validator');
 const router = express.Router();
+const authController = require('../controllers/authcontrollers');
+const authMiddleware = require('../middleware/authmiddleware'); // ✅ add this
 
-// Correct path and name
-const authController = require('../controllers/authcontrollers'); 
-
-router.post(
-  '/register',
+// Register
+router.post('/register',
   body('email').isEmail(),
   body('password').isLength({ min: 6 }),
-  body('name').notEmpty(), // changed from username to name to match schema
-  authController.registerUser
+  body('username').notEmpty(),
+  authController.register
 );
 
-router.post(
-  '/login',
+// Login
+router.post('/login',
   body('email').isEmail(),
   body('password').exists(),
-  authController.loginUser
+  authController.login
+);
+
+// Add purchase (Protected)
+router.post('/purchase',
+  authMiddleware, // ✅ protects this route
+  body('productName').notEmpty(),
+  body('quantity').isInt({ min: 1 }),
+  body('price').isNumeric(),
+  authController.addPurchase
 );
 
 module.exports = router;
