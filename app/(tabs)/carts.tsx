@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Button, FlatList, StyleSheet } from "react-native";
-import { loadCart, saveCart, getCart } from "./carts";
+import { loadCart, saveCart, getCart } from "./utilitily/carts";
 
 export default function CartScreen() {
   const [cart, setCart] = useState(getCart());
