@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Button, FlatList, StyleSheet } from "react-native";
-import { addToCart } from "./carts"; // correct path
+import { addToCart } from "./utility/carts"; // correct path
 
 const products = [
   { id: "101", name: "React T-shirt", price: 499 },
