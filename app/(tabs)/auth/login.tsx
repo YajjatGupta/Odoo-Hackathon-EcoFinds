@@ -1,17 +1,48 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
+import { useUser } from '@/hooks/useUserContext';
 
 export default function Login() {
   const router = useRouter();
+  const { login, loading } = useUser();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  const handleLogin = () => {
-    if (email && password) {
-      router.replace('/(tabs)'); // Navigate to main tabs
-    } else {
-      alert('Please fill all fields');
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please fill all fields');
+      return;
+    }
+
+    setIsLoggingIn(true);
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Assuming the backend returns a `user` object and `token`
+        await login(data.user, data.token);
+        router.replace('/(tabs)/dashboard'); // Navigate to the dashboard after successful login
+      } else {
+        Alert.alert('Error', data.message || 'Login failed');
+      }
+    } catch (err) {
+      console.error(err);
+      Alert.alert('Error', 'Network error. Please try again.');
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
@@ -34,8 +65,8 @@ export default function Login() {
         secureTextEntry
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+      <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={isLoggingIn}>
+        <Text style={styles.buttonText}>{isLoggingIn ? 'Logging in...' : 'Login'}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push('./Signup')}>

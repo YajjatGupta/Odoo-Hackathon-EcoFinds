@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 
@@ -7,13 +7,41 @@ export default function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSignup = () => {
-    if (name && email && password) {
-      alert('Account created!');
-      router.replace('./login'); // Go back to login
-    } else {
-      alert('Please fill all fields');
+  const handleSignup = async () => {
+    if (!name || !email || !password) {
+      Alert.alert('Error', 'Please fill all fields');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: name,
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert('Success', 'Account created! You can now log in.');
+        router.replace('./login');
+      } else {
+        Alert.alert('Error', data.message || 'Registration failed');
+      }
+    } catch (err) {
+      console.error(err);
+      Alert.alert('Error', 'Network error. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,8 +70,8 @@ export default function Signup() {
         secureTextEntry
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleSignup}>
-        <Text style={styles.buttonText}>Sign Up</Text>
+      <TouchableOpacity style={styles.button} onPress={handleSignup} disabled={loading}>
+        <Text style={styles.buttonText}>{loading ? 'Creating...' : 'Sign Up'}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push('./login')}>
